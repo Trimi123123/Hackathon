@@ -1,44 +1,80 @@
 <?php
 session_start();
-require "config.php"; // Make sure this file contains your $conn database connection
-
-// Only process if form is submitted via POST
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
-    // Collect form data safely
-    $username = trim($_POST['username'] ?? '');
-    $email    = trim($_POST['email'] ?? '');
-    $password = trim($_POST['password'] ?? '');
-
-    // Check for empty fields
-    if (empty($username) || empty($email) || empty($password)) {
-        die("All fields are required. <a href='signup.html'>Go back</a>");
-    }
-
-    // Hash the password
-    $password_hash = password_hash($password, PASSWORD_DEFAULT);
-
-    // Prepare SQL statement to avoid SQL injection
-    $stmt = $conn->prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");
-    $stmt->bind_param("sss", $username, $email, $password_hash);
-
-    // Execute and handle errors
-    try {
-        $stmt->execute();
-        // Redirect to login page after successful signup
-        header("Location: login.html");
-        exit;
-    } catch (mysqli_sql_exception $e) {
-        // Handle duplicate username/email error
-        if (strpos($e->getMessage(), "Duplicate") !== false) {
-            die("Username or email already exists. <a href='signup.html'>Go back</a>");
-        } else {
-            die("Database error: " . $e->getMessage());
-        }
-    }
-
-} else {
-    // Prevent direct access to signup.php
-    die("Invalid request. <a href='signup.html'>Go back</a>");
-}
 ?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Sign Up</title>
+<style>
+    body {
+        background-color: #000;
+        color: #fff;
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+    .signup-container {
+        background-color: #111;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px #fff;
+    }
+    input[type="text"], input[type="password"], input[type="email"] {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border: 1px solid #fff;
+        border-radius: 4px;
+        background-color: #000;
+        color: #fff;
+    }
+    input[type="submit"] {
+        width: 100%;
+        padding: 10px;
+        margin-top: 10px;
+        border: none;
+        border-radius: 4px;
+        background-color: #fff;
+        color: #000;
+        font-weight: bold;
+        cursor: pointer;
+    }
+    input[type="submit"]:hover {
+        background-color: #ddd;
+    }
+    .error, .success {
+        margin-top: 10px;
+        text-align: center;
+    }
+    .error { color: #ff4d4d; }
+    .success { color: #4dff4d; }
+</style>
+</head>
+<body>
+<div class="signup-container">
+    <h2>Sign Up</h2>
+    <form action="signupLogic.php" method="POST">
+        <input type="text" name="username" placeholder="Username" required>
+        <input type="email" name="email" placeholder="Email" required>
+        <input type="password" name="password" placeholder="Password" required>
+        <input type="password" name="confirm_password" placeholder="Confirm Password" required>
+        <input type="submit" value="Sign Up">
+    </form>
+    <?php
+    if(isset($_SESSION['signup_error'])){
+        echo "<div class='error'>".$_SESSION['signup_error']."</div>";
+        unset($_SESSION['signup_error']);
+    }
+    if(isset($_SESSION['signup_success'])){
+        echo "<div class='success'>".$_SESSION['signup_success']."</div>";
+        unset($_SESSION['signup_success']);
+    }
+    ?>
+</div>
+</body>
+</html>
