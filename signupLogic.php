@@ -38,7 +38,8 @@ if($result->num_rows > 0){
 }
 
 // Hash the password
-$hashed_pass = password_hash($pass, PASSWORD_DEFAULT);
+$hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
 
 // Insert new user
 $stmt = $conn->prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");

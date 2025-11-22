@@ -1,4 +1,18 @@
-<?php include_once("header.php");?>
+<?php session_start();
+
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit();
+}
+?><?php include_once("header.php");?>
+<?php
+session_start();
+
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit();
+}
+?>
 
 <header>
     <h1>Trim's Quantum Arcade</h1>
