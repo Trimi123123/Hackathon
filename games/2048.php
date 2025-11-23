@@ -1,65 +1,131 @@
+<?php
+session_start();
+if(!isset($_SESSION['user_id'])){
+    header('Location: login.php');
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>2048 Game</title>
+<title>2048 - Quantum Arcade</title>
 <style>
-    body {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        margin: 0;
-        background: #000;
-        color: #fff;
-        font-family: Arial, sans-serif;
-        flex-direction: column;
-    }
-    #game-board {
-        display: grid;
-        grid-template-columns: repeat(4, 100px);
-        grid-template-rows: repeat(4, 100px);
-        gap: 5px;
-        margin-bottom: 20px;
-    }
-    .tile {
-        width: 100px;
-        height: 100px;
-        background: #333;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 32px;
-        font-weight: bold;
-        border-radius: 5px;
-    }
-    #reset {
-        padding: 10px 20px;
-        font-size: 16px;
-        cursor: pointer;
-        border: none;
-        border-radius: 5px;
-        background-color: #fff;
-        color: #000;
-        font-weight: bold;
-    }
+body {
+    margin: 0;
+    background-color: #1e1e1e;
+    color: #e0e0e0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+header {
+    background: linear-gradient(90deg, #3a3a3a, #2c2c2c);
+    padding: 30px 20px;
+    text-align: center;
+    color: #fff;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.7);
+    border-bottom: 2px solid #444;
+}
+header h1 {
+    font-size: 2.5em;
+    margin: 0;
+    text-shadow: 1px 1px 5px #000;
+}
+.container {
+    max-width: 500px;
+    margin: 40px auto;
+    background-color: #2f2f2f;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.7);
+    text-align: center;
+}
+#game-board {
+    display: grid;
+    grid-template-columns: repeat(4, 90px);
+    grid-template-rows: repeat(4, 90px);
+    gap: 10px;
+    margin-bottom: 25px;
+}
+.tile {
+    width: 90px;
+    height: 90px;
+    background-color: #3a3a3a;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 28px;
+    font-weight: bold;
+    border-radius: 10px;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+    transition: background 0.2s;
+}
+button {
+    padding: 12px 30px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    border-radius: 10px;
+    background-color: #3a3a3a;
+    color: #fff;
+    font-weight: bold;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.6);
+    transition: background 0.3s, transform 0.2s;
+}
+button:hover {
+    background-color: #4a4a4a;
+    transform: translateY(-3px);
+}
+.back-btn {
+    margin-top: 15px;
+}
+.back-btn a {
+    display: inline-block;
+    color: #fff;
+    text-decoration: none;
+    padding: 12px 30px;
+    background-color: #3a3a3a;
+    border-radius: 10px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.6);
+    font-weight: bold;
+    transition: background 0.3s, transform 0.2s;
+}
+.back-btn a:hover {
+    background-color: #4a4a4a;
+    transform: translateY(-3px);
+}
 </style>
 </head>
 <body>
-<h2>2048</h2>
-<div id="game-board"></div>
-<button id="reset">Reset Game</button>
+<header>
+    <h1>2048 - Quantum Arcade</h1>
+</header>
+<div class="container">
+    <div class="score-board">
+        Score: <span id="score">0</span>
+    </div>
+    <div id="game-board"></div>
+    <button id="reset">Reset Game</button>
+    <div class="back-btn">
+        <a href="../index.php">⬅ Back to Arcade</a>
+    </div>
+</div>
+
 <script>
 const boardSize = 4;
 let board = [];
+let score = 0;
 const boardEl = document.getElementById('game-board');
 const resetBtn = document.getElementById('reset');
+const scoreEl = document.getElementById('score');
 
 function init(){
     board = [];
     boardEl.innerHTML = '';
+    score = 0;
+    scoreEl.textContent = score;
     for(let i=0;i<boardSize;i++){
-        board[i] = [];
+        board[i]=[];
         for(let j=0;j<boardSize;j++){
             board[i][j]=0;
             let div = document.createElement('div');
@@ -91,9 +157,10 @@ function draw(){
             let value = board[i][j];
             let index = i*boardSize + j;
             tiles[index].textContent = value===0?'':value;
-            tiles[index].style.backgroundColor = value===0?'#333':'#'+(value*123456).toString(16).slice(0,6);
+            tiles[index].style.backgroundColor = value===0?'#3a3a3a':'#'+(value*123456).toString(16).slice(0,6);
         }
     }
+    scoreEl.textContent = score;
 }
 
 function slide(row){
@@ -101,6 +168,7 @@ function slide(row){
     for(let i=0;i<arr.length-1;i++){
         if(arr[i]===arr[i+1]){
             arr[i]*=2;
+            score += arr[i];
             arr[i+1]=0;
         }
     }
@@ -108,8 +176,8 @@ function slide(row){
 }
 
 function move(dir){
-    let rotated = false;
-    let moved = false;
+    let rotated=false;
+    let moved=false;
 
     function rotate(){
         let newBoard = [];
@@ -156,7 +224,7 @@ function checkGameOver(){
             if(j<boardSize-1 && board[i][j]===board[i][j+1]) return;
         }
     }
-    alert('Game Over!');
+    alert('Game Over! Score: '+score);
 }
 
 document.addEventListener('keydown', e => {

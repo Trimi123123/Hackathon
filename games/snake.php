@@ -2,33 +2,111 @@
 session_start();
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Chase Game with Points</title>
-    <style>
-        body {
-            background: #000;
-            color: #fff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            font-family: Arial, sans-serif;
-            flex-direction: column;
-        }
-        canvas {
-            background: #111;
-            border: 2px solid #fff;
-        }
-        h2, p { margin: 5px; }
-    </style>
+<meta charset="UTF-8">
+<title>Snake - Quantum Arcade</title>
+
+<style>
+body {
+    margin: 0;
+    background-color: #1e1e1e;
+    color: #e0e0e0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+header {
+    background: linear-gradient(90deg, #3a3a3a, #2c2c2c);
+    padding: 30px 20px;
+    text-align: center;
+    color: #fff;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.7);
+    border-bottom: 2px solid #444;
+}
+
+header h1 {
+    font-size: 2.5em;
+    margin: 0;
+    text-shadow: 1px 1px 5px #000;
+}
+
+.container {
+    max-width: 900px;
+    margin: 40px auto;
+    background-color: #2f2f2f;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.7);
+    text-align: center;
+}
+
+.instructions {
+    margin-bottom: 15px;
+    font-size: 1.1em;
+    color: #ccc;
+}
+
+.score-board {
+    margin: 15px 0 25px;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+canvas {
+    background-color: #1e1e1e;
+    border: 3px solid #444;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.9);
+}
+
+.back-btn {
+    margin-top: 25px;
+}
+
+.back-btn a {
+    display: inline-block;
+    color: #fff;
+    text-decoration: none;
+    padding: 12px 30px;
+    background-color: #3a3a3a;
+    border-radius: 10px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.6);
+    font-weight: bold;
+    transition: background 0.3s, transform 0.2s;
+}
+
+.back-btn a:hover {
+    background-color: #4a4a4a;
+    transform: translateY(-3px);
+}
+</style>
 </head>
+
 <body>
-<h2>Green = You | Red = Chaser | Yellow = Points</h2>
-<p>Use ARROW KEYS to move. Collect points! Game ends if red catches you.</p>
-<canvas id="game" width="400" height="400"></canvas>
-<div>Score: <span id="score">0</span> | Highscore: <span id="highscore">0</span></div>
+
+<header>
+    <h1>🐍 Snake Chase - Quantum Arcade</h1>
+</header>
+
+<div class="container">
+
+    <div class="instructions">
+        Green = You | Red = Chaser | Yellow = Points <br>
+        Use ARROW KEYS to move. Avoid the red chaser and collect points!
+    </div>
+
+    <div class="score-board">
+        Score: <span id="score">0</span> |
+        Highscore: <span id="highscore">0</span>
+    </div>
+
+    <canvas id="game" width="400" height="400"></canvas>
+
+    <div class="back-btn">
+        <a href="../index.php">⬅ Back to Arcade</a>
+    </div>
+</div>
+
 <script>
 const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d');
@@ -41,7 +119,7 @@ let highscore = parseInt(localStorage.getItem('chase_high')) || 0;
 
 document.getElementById('highscore').textContent = highscore;
 
-// Generate 10 random points
+// Generate points
 for (let i = 0; i < 10; i++) {
     points.push({ x: Math.random() * 380 + 10, y: Math.random() * 380 + 10, size: 5 });
 }
@@ -49,7 +127,6 @@ for (let i = 0; i < 10; i++) {
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // draw points
     ctx.fillStyle = 'yellow';
     points.forEach(p => {
         ctx.beginPath();
@@ -57,13 +134,11 @@ function draw() {
         ctx.fill();
     });
 
-    // draw player
     ctx.fillStyle = 'lime';
     ctx.beginPath();
     ctx.arc(player.x, player.y, player.size, 0, Math.PI * 2);
     ctx.fill();
 
-    // draw chaser
     ctx.fillStyle = 'red';
     ctx.beginPath();
     ctx.arc(chaser.x, chaser.y, chaser.size, 0, Math.PI * 2);
@@ -80,18 +155,17 @@ function moveChaser() {
 }
 
 function checkCollision() {
-    // collision with chaser
     let dx = player.x - chaser.x;
     let dy = player.y - chaser.y;
+
     if (Math.sqrt(dx*dx + dy*dy) < player.size + chaser.size) {
-        alert('Game Over! Your score: '+score);
+        alert('Game Over! Your score: ' + score);
         if(score > highscore){
             localStorage.setItem('chase_high', score);
         }
         location.reload();
     }
 
-    // collision with points
     points.forEach((p, i) => {
         let pdx = player.x - p.x;
         let pdy = player.y - p.y;

@@ -1,42 +1,103 @@
+<?php
+session_start();
+if(!isset($_SESSION['user_id'])){
+    header('Location: login.php');
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Flappy Bird</title>
+<title>Flappy Bird - Quantum Arcade</title>
 <style>
-    body {
-        margin: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        background: #70c5ce;
-        font-family: Arial, sans-serif;
-        flex-direction: column;
-    }
-    canvas {
-        background: #70c5ce;
-        display: block;
-        border: 2px solid #000;
-    }
-    #resetButton {
-        display: none;
-        margin-top: 10px;
-        padding: 10px 20px;
-        font-size: 16px;
-        cursor: pointer;
-        border: none;
-        border-radius: 5px;
-        background-color: #fff;
-        color: #000;
-        font-weight: bold;
-    }
+body {
+    margin: 0;
+    background-color: #1e1e1e;
+    color: #e0e0e0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+header {
+    background: linear-gradient(90deg, #3a3a3a, #2c2c2c);
+    padding: 30px 20px;
+    text-align: center;
+    color: #fff;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.7);
+    border-bottom: 2px solid #444;
+}
+header h1 {
+    font-size: 2.5em;
+    margin: 0;
+    text-shadow: 1px 1px 5px #000;
+}
+.container {
+    max-width: 600px;
+    margin: 40px auto;
+    background-color: #2f2f2f;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.7);
+    text-align: center;
+}
+canvas {
+    background-color: #1e1e1e;
+    border: 3px solid #444;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.9);
+    margin-bottom: 25px;
+}
+.score-board {
+    margin: 15px 0 25px;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+.back-btn {
+    margin-top: 10px;
+}
+.back-btn a {
+    display: inline-block;
+    color: #fff;
+    text-decoration: none;
+    padding: 12px 30px;
+    background-color: #3a3a3a;
+    border-radius: 10px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.6);
+    font-weight: bold;
+    transition: background 0.3s, transform 0.2s;
+}
+.back-btn a:hover {
+    background-color: #4a4a4a;
+    transform: translateY(-3px);
+}
+#resetButton {
+    display: none;
+    margin-top: 15px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    background-color: #fff;
+    color: #000;
+    font-weight: bold;
+}
 </style>
 </head>
 <body>
-<canvas id="game" width="400" height="600"></canvas>
-<div style="position:absolute;top:10px;color:#fff;font-size:20px;">Score: <span id="score">0</span></div>
-<button id="resetButton">Reset</button>
+<header>
+    <h1>🐦 Flappy Bird - Quantum Arcade</h1>
+</header>
+<div class="container">
+    <div class="score-board">
+        Score: <span id="score">0</span>
+    </div>
+    <canvas id="game" width="400" height="600"></canvas>
+    <button id="resetButton">Reset</button>
+    <div class="back-btn">
+        <a href="../index.php">⬅ Back to Arcade</a>
+    </div>
+</div>
+
 <script>
 const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d');
@@ -55,12 +116,12 @@ function init(){
 }
 
 function drawBird(){
-    ctx.fillStyle = 'yellow';
+    ctx.fillStyle = 'lime';
     ctx.fillRect(bird.x, bird.y, bird.width, bird.height);
 }
 
 function drawPipes(){
-    ctx.fillStyle = 'green';
+    ctx.fillStyle = 'red';
     pipes.forEach(pipe => {
         ctx.fillRect(pipe.x, 0, 50, pipe.top);
         ctx.fillRect(pipe.x, canvas.height - pipe.bottom, 50, pipe.bottom);

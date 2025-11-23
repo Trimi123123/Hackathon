@@ -106,7 +106,6 @@ if (!isset($_SESSION['user_id'])) {
         <div class="game-card"><a href="games/tetris.php">🧱 Tetris</a></div>
         <div class="game-card"><a href="games/pong.php">🏓 Pong</a></div>
         <div class="game-card"><a href="games/flappy.php">🐤 Flappy Bird</a></div>
-        <div class="game-card"><a href="games/minesweeper.php">💣 Minesweeper</a></div>
         <div class="game-card"><a href="games/2048.php">🔢 2048</a></div>
         <div class="game-card"><a href="games/cookie_clicker.php">🍪 Cookie Clicker</a></div>
         <div class="game-card"><a href="games/breakout.php">🏗️ Breakout</a></div>

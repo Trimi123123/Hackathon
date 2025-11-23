@@ -1,90 +1,141 @@
 <?php
 session_start();
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Log In</title>
+<title>Login - Quantum Arcade</title>
 <style>
-    body {
-        background-color: #000;
-        color: #fff;
-        font-family: Arial, sans-serif;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        margin: 0;
-    }
-    .login-container {
-        background-color: #111;
-        padding: 30px;
-        border-radius: 8px;
-        box-shadow: 0 0 10px #fff;
-        width: 300px;
-    }
-    input[type="text"], input[type="password"] {
-        width: 100%;
-        padding: 10px;
-        margin: 10px 0;
-        border: 1px solid #fff;
-        border-radius: 4px;
-        background-color: #000;
-        color: #fff;
-    }
-    input[type="submit"] {
-        width: 100%;
-        padding: 10px;
-        margin-top: 10px;
-        border: none;
-        border-radius: 4px;
-        background-color: #fff;
-        color: #000;
-        font-weight: bold;
-        cursor: pointer;
-    }
-    input[type="submit"]:hover {
-        background-color: #ddd;
-    }
-    .signup-btn {
-        background-color: #444;
-        color: #fff;
-    }
-    .signup-btn:hover {
-        background-color: #666;
-    }
-    .error, .success {
-        margin-top: 10px;
-        text-align: center;
-    }
-    .error { color: #ff4d4d; }
-    .success { color: #4dff4d; }
+body {
+    margin: 0;
+    background-color: #1e1e1e;
+    color: #e0e0e0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+header {
+    background: linear-gradient(90deg, #3a3a3a, #2c2c2c);
+    padding: 40px 20px;
+    text-align: center;
+    color: #fff;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.7);
+    border-bottom: 2px solid #444;
+}
+
+header h1 {
+    font-size: 3em;
+    letter-spacing: 2px;
+    margin: 0;
+    text-shadow: 1px 1px 5px #000;
+}
+
+.container {
+    max-width: 500px;
+    margin: 60px auto;
+    background-color: #2f2f2f;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.7);
+}
+
+.container h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    border-bottom: 2px solid #444;
+    padding-bottom: 10px;
+    font-size: 2em;
+}
+
+input {
+    width: 100%;
+    padding: 14px;
+    margin: 12px 0;
+    border-radius: 8px;
+    border: 1px solid #555;
+    background-color: #1e1e1e;
+    color: #fff;
+    font-size: 1em;
+}
+
+button {
+    width: 100%;
+    padding: 14px;
+    background-color: #3a3a3a;
+    border: none;
+    border-radius: 10px;
+    color: #fff;
+    font-size: 1.2em;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s, transform 0.2s;
+}
+
+button:hover {
+    background-color: #4a4a4a;
+    transform: translateY(-2px);
+}
+
+.message {
+    margin-top: 15px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.error {
+    color: #ff5c5c;
+}
+
+.success {
+    color: #5cff8d;
+}
+
+.signup-link {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.signup-link a {
+    color: #aaa;
+    text-decoration: none;
+}
+
+.signup-link a:hover {
+    color: #fff;
+}
 </style>
 </head>
 <body>
 
-<div class="login-container">
-    <h2>Log In</h2>
+<header>
+    <h1>Quantum Arcade</h1>
+</header>
+
+<div class="container">
+    <h2>Login</h2>
 
     <form action="loginLogic.php" method="POST">
-    <input type="text" name="username" required>
-    <input type="password" name="password" required>
-    <button type="submit">Login</button>
-</form>
+        <input type="text" name="username" placeholder="Username or Email" required>
+        <input type="password" name="password" placeholder="Password" required>
+
+        <button type="submit" name="login">Login</button>
+    </form>
 
     <?php
     if(isset($_SESSION['login_error'])){
-        echo "<div class='error'>".$_SESSION['login_error']."</div>";
+        echo "<div class='message error'>".$_SESSION['login_error']."</div>";
         unset($_SESSION['login_error']);
     }
 
     if(isset($_SESSION['login_success'])){
-        echo "<div class='success'>".$_SESSION['login_success']."</div>";
+        echo "<div class='message success'>".$_SESSION['login_success']."</div>";
         unset($_SESSION['login_success']);
     }
     ?>
+
+    <div class="signup-link">
+        Don’t have an account? <a href="signup.php">Sign Up</a>
+    </div>
 </div>
 
 </body>
