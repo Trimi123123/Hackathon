@@ -69,15 +69,10 @@ session_start();
     <h2>Log In</h2>
 
     <form action="loginLogic.php" method="POST">
-        <input type="text" name="username_email" placeholder="Username or Email" required>
-        <input type="password" name="password" placeholder="Password" required>
-        <input type="submit" value="Log In">
-    </form>
-
-    <!-- Back to Sign Up -->
-    <form action="signup.php" method="get">
-        <input type="submit" class="signup-btn" value="Sign Up">
-    </form>
+    <input type="text" name="username" required>
+    <input type="password" name="password" required>
+    <button type="submit">Login</button>
+</form>
 
     <?php
     if(isset($_SESSION['login_error'])){

@@ -48,13 +48,6 @@ session_start();
     input[type="submit"]:hover {
         background-color: #ddd;
     }
-    .login-btn {
-        background-color: #444;
-        color: #fff;
-    }
-    .login-btn:hover {
-        background-color: #666;
-    }
     .error, .success {
         margin-top: 10px;
         text-align: center;
@@ -69,17 +62,12 @@ session_start();
     <h2>Sign Up</h2>
 
     <form action="signupLogic.php" method="POST">
-        <input type="text" name="username" placeholder="Username" required>
-        <input type="email" name="email" placeholder="Email" required>
-        <input type="password" name="password" placeholder="Password" required>
-        <input type="password" name="confirm_password" placeholder="Confirm Password" required>
-        <input type="submit" value="Sign Up">
-    </form>
+    <input type="text" name="username" required placeholder="Username">
+    <input type="email" name="email" required placeholder="Email">
+    <input type="password" name="password" required placeholder="Password">
 
-    <!-- Log In Button -->
-    <form action="login.php" method="get">
-        <input type="submit" class="login-btn" value="Log In">
-    </form>
+    <button type="submit" name="signup">Sign Up</button>
+</form>
 
     <?php
     if(isset($_SESSION['signup_error'])){
